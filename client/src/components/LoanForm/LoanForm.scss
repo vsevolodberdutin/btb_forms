@@ -1,0 +1,38 @@
+.wrapper {
+  width: 700px;
+  margin: 30px auto 0;
+  text-align: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  .form {
+      background-color: rgb(241, 241, 241);
+      border-radius: 30px;
+      padding: 20px;
+    .row {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+  }
+  .grey{
+      color: gray;
+      background-color: white !important;
+  }
+  .btn-continue-wrap {
+    width: 40px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .btn-continue {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      border: 2px black solid;
+    }
+    h6 {
+      margin: 0;
+    }
+  }
+}
