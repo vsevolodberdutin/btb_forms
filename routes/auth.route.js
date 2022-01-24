@@ -2,7 +2,7 @@ const {Router} = require('express')
 const router = Router()
 const User = require('../models/User')
 const {check, validationResult} = require('express-validator')
-const bcrypter = require('bcryptjs')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 router.post('/registration',
@@ -29,11 +29,9 @@ async (req,res) => {
             return res.status(300).json({massage:'This Email is exist, try another'})
         }
 
-        const hashedPassword = await bcrypter.hash(password, 12)
-
         const user = new User({
             email,
-            password: hashedPassword,
+            password,
         })
 
         await user.save()
@@ -69,9 +67,7 @@ async (req,res) => {
             return res.status(400).json({message:'this email is not exist in the data base'})
         }
 
-        const isMatch = bcrypter.compare(password, user.password)
-        
-        if(!isMatch){
+        if(password != user.password){
             return res.status(400).json({message:'password is not correct'})
         }
 

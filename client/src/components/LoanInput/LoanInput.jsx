@@ -3,10 +3,10 @@ import './LoanInput.scss'
 
 export const LoanInput = (props) => {
   return (
-    <div className="input">
+    <div className="input loan-input">
       <h5>{props.name}</h5>
-      <div class="input-field">
-        <input type="text" className="validate" />
+      <div className="input-field">
+        <input type="tel" className="validate" required/>
       </div>
     </div>
   )
