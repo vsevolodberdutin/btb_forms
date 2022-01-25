@@ -10,8 +10,6 @@ const schema = new Schema({
     email: {type: String, required: true},
     nameOfCompany: {type: String, required: true},
     partnership: {type: String, required: true},
-    // procents: {type: String, required: true},
-    // info: [{}],
 })
 
 module.exports = model('Data', schema)

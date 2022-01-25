@@ -17,10 +17,11 @@ export const LoanSelect = (props) => {
     <div className="input">
       <h5>{props.name}</h5>
       <div className="input-field">
-        <select>
-          <option value="1">{props.isBank ? 'Leumi' : '20%'}</option>
-          <option value="2">{props.isBank ? 'Hapoalim' : '35%'}</option>
-          <option value="3">{props.isBank ? 'Mizrahi' : '50%'}</option>
+        <select onChange={ e => console.log(e.currentTarget.value)}>
+          <option disabled>{props.isBank ? 'choose your bank' : 'choose your procent'}</option>
+          <option >{props.isBank ? 'Leumi' : '20%'}</option>
+          <option >{props.isBank ? 'Hapoalim' : '35%'}</option>
+          <option >{props.isBank ? 'Mizrahi' : '50%'}</option>
         </select>
       </div>
     </div>

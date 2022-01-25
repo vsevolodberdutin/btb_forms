@@ -44,7 +44,6 @@ const Input = () => {
   }, [name, surname, teudatZeut, userId, dateOfBirth, phone, email, nameOfCompany, partnership, data])
 
   const buttonHandler = () => {
-    console.log('continue')
     history.push('/loan')
   }
 
@@ -72,8 +71,8 @@ const Input = () => {
           />
           <input
             type="tel"
-            minlength="9"
-            maxlength="9"
+            minLength="9"
+            maxLength="9"
             placeholder="תעודת זהות"
             className="validate"
             required
@@ -90,8 +89,8 @@ const Input = () => {
           />
           <input
             type="tel"
-            minlength="10"
-            maxlength="10"
+            minLength="10"
+            maxLength="10"
             placeholder="טלפון"
             className="validate"
             value={phone}
