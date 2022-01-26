@@ -4,11 +4,12 @@ const BankAccounts = require('../models/BankAccounts')
 
 router.post('/add', async (req,res) => {
     try {
-        const {procents, userId} = req.body
+        const {procents, info, userId} = req.body
 
         const bankAccounts = await new BankAccounts({
             owner: userId,
             procents,
+            info
       
         })
 

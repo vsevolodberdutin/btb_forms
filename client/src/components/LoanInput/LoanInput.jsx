@@ -1,29 +1,69 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import './LoanInput.scss'
 
-export const LoanInput = (props) => {
-  return (
-    <div className="input loan-input">
-      <h5>{props.name}</h5>
-      <div className="input-field">
-        <input type="tel" className="validate" required/>
-      </div>
-    </div>
-  )
-}
+export const LoanInput = () => {
+  const [info, setInfo] = useState('')
 
-export const LoanSelect = (props) => {
+  const [bank, setBank] = useState('Leumi')
+  const [snif, setSnif] = useState('')
+  const [hashbon, setHashbon] = useState('')
+
+  localStorage.setItem('info', info)
+
   return (
-    <div className="input">
-      <h5>{props.name}</h5>
-      <div className="input-field">
-        <select onChange={ e => console.log(e.currentTarget.value)}>
-          <option disabled>{props.isBank ? 'choose your bank' : 'choose your procent'}</option>
-          <option >{props.isBank ? 'Leumi' : '20%'}</option>
-          <option >{props.isBank ? 'Hapoalim' : '35%'}</option>
-          <option >{props.isBank ? 'Mizrahi' : '50%'}</option>
-        </select>
+    <>
+      <div className="row">
+        <div className="input">
+          <h5>בנק</h5>
+          <div className="input-field">
+            <select onChange={(e) => setBank(e.currentTarget.value)}>
+              <option disabled>choose your bank</option>
+              <option>Leumi </option>
+              <option>Hapoalim </option>
+              <option>Mizrahi </option>
+            </select>
+          </div>
+        </div>
+
+        <div className="input loan-input">
+          <h5>סניף</h5>
+          <div className="input-field">
+            <input
+              type="tel"
+              className="validate"
+              required
+              onChange={(e) => setSnif(e.currentTarget.value)}
+            />
+          </div>
+        </div>
+
+        <div className="input loan-input">
+          <h5>חשבון</h5>
+          <div className="input-field">
+            <input
+              type="tel"
+              className="validate"
+              required
+              onChange={(e) => setHashbon(e.currentTarget.value)}
+            />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {/* <i className="material-icons red-text"  type="submit"  onClick={e => console.log("del")} style={{cursor:'pointer'}}>
+              highlight_off
+              </i> */}
+
+          <batton
+            className="btn green "
+            type="submit"
+            onClick={(e) => setInfo(`${bank + ' ' + snif + ' ' + hashbon}`)}
+            style={{ cursor: 'pointer' }}
+          >
+            save
+          </batton>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

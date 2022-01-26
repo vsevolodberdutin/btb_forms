@@ -3,7 +3,8 @@ const {Schema, model, Types} = require('mongoose')
 const schema = new Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    data: [{type: Types.ObjectId, ref: 'Data'}]
+    data: [{type: Types.ObjectId, ref: 'Data'}],
+    bankAccounts: [{type: Types.ObjectId, ref: 'BankAccounts'}]
 })
 
 module.exports = model('User', schema)
