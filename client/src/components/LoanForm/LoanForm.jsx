@@ -63,8 +63,6 @@ const LoanForm = () => {
 
         <div className="form">
           <LoanInput/>
-          <LoanInput/>
-          <LoanInput/>
         </div>
 
         {/* <h5 className="grey">הוסף חשבון<i className="material-icons add_circle_outline">add_circle_outline</i></h5> */}

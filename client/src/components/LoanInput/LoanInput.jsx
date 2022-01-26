@@ -54,14 +54,17 @@ export const LoanInput = () => {
               highlight_off
               </i> */}
 
-          <batton
+          <button
             className="btn green "
             type="submit"
-            onClick={(e) => setInfo(`${bank + ' ' + snif + ' ' + hashbon}`)}
+            onClick={(e) => {
+              setInfo(`${bank + ' ' + snif + ' ' + hashbon}`)
+              alert('Data saved')
+            }}
             style={{ cursor: 'pointer' }}
           >
             save
-          </batton>
+          </button>
         </div>
       </div>
     </>
