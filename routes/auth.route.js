@@ -29,9 +29,11 @@ async (req,res) => {
             return res.status(300).json({massage:'This Email is exist, try another'})
         }
 
+        const hashedPassword = await bcrypt.hash(password, 12)
+
         const user = new User({
             email,
-            password,
+            password: hashedPassword,
         })
 
         await user.save()
@@ -67,7 +69,9 @@ async (req,res) => {
             return res.status(400).json({message:'this email is not exist in the data base'})
         }
 
-        if(password != user.password){
+        const isMatch = bcrypt.compareSync(password, user.password)
+
+        if(!isMatch){
             return res.status(400).json({message:'password is not correct'})
         }
 

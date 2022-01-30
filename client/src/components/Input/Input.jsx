@@ -28,6 +28,7 @@ const Input = () => {
         }
       })
       .then((response) => {
+        alert("Personal data saved!")
         setData([...data], response.data)
         setName('')
         setSurname('')
@@ -37,6 +38,7 @@ const Input = () => {
         setEmail('')
         setNameOfCompany('')
         setPartnership('')
+        history.push('/loan')
       })
     } catch (error) {
       console.log(error)

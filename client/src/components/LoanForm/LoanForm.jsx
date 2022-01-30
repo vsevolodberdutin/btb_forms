@@ -1,74 +1,125 @@
-import React, {useState, useCallback, useContext, useEffect} from 'react'
+import React, { useState, useCallback, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import './LoanForm.scss'
 import { LoanInput } from '../LoanInput/LoanInput'
-import {AuthContext} from '../../context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import axios from 'axios'
 
 const LoanForm = () => {
   let history = useHistory()
-  // const [info,setInfo]= useState("")
+  const initialAccount = { bank: '', hashbon: '', snif: '' }
 
-  const [procents, setProcents] = useState('20%')
-  let info = (localStorage.getItem('info') === null ? "not found" : localStorage.getItem('info'))
+  const [accounts, setAccounts] = useState([initialAccount])
+  const { userId } = useContext(AuthContext)
+  const [procent, setProcent] = useState('20%')
 
-  useEffect(( ) => {
-    return (
-      createBankAccounts()
- )},[info])
-
-  const {userId} = useContext(AuthContext)
-
-  
-  const [bankAccounts, setBankAccounts] = useState([])
-
-  const createBankAccounts = useCallback(async () => {
+  const getAccounts = useCallback(async () => {
     try {
-      if (info != "")
-      await axios.post('/api/bankAccounts/add', {procents, info, userId}, {
+      await axios
+        .get('/api/bankAccounts', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          params: { userId },
+        })
+        .then((response) => {
+          // console.log('res', response)
+          if (response.data.length != 0) setAccounts(response.data[0].accounts)
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [userId])
+
+  useEffect(() => {
+    getAccounts()
+  },[])
+
+  const createAccounts = useCallback(async () => {
+    try {
+      if (accounts[0].snif != "")
+      await axios.post('/api/bankAccounts/add', {procent, accounts, userId}, {
         headers: {
           'Content-Type': 'application/json'
         }
       })
       .then((response) => {
-        setBankAccounts([...bankAccounts], response.bankAccounts)
-        info = ""
+        setAccounts([...accounts], response.accounts)
+        getAccounts()
       })
     } catch (error) {
       console.log(error)
     }
-  }, [procents, info, bankAccounts])
+  }, [procent, accounts, userId])
+
 
   const buttonHandler = () => {
     history.push('/')
   }
 
+  const addAccount = () => {
+    if (accounts[accounts.length-1].hashbon != '') {
+    setAccounts([...accounts, initialAccount])
+    
+  }
+  }
+
+  const updateData = (value) => {
+    
+    const arr = accounts.slice(0, -1)
+    setAccounts([...arr, { bank: value.bank, hashbon: value.hashbon, snif: value.snif}])
+    // console.log("value", accounts)
+ }
+
   return (
     <div className="wrapper">
-      <form onSubmit={e => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <h3>אנא מלאו את פרטי החשבונות של חברת שלמה יזמות ובניו</h3>
         <h6>חפ: 51-65758854</h6>
 
         <div className="input">
-        <h5>החזקה %</h5>
-        <div className="input-field">
-          <select onChange={ e => e.currentTarget.value !== "DEFAULT" ? setProcents(e.currentTarget.value) : null}>
-            <option value="DEFAULT" style={{'color':"grey"}}>choose your procent</option>
-            <option >20%</option>
-            <option >35%</option>
-            <option >50%</option>
-          </select>
+          <h5>החזקה %</h5>
+          <div className="input-field">
+            <select
+              value={procent}
+              onChange={(e) =>
+                e.currentTarget.value !== 'DEFAULT'
+                  ? setProcent(e.currentTarget.value)
+                  : null
+              }
+            >
+              <option value="DEFAULT" style={{ color: 'grey' }}>
+                choose your procent
+              </option>
+              <option>20%</option>
+              <option>35%</option>
+              <option>50%</option>
+            </select>
+          </div>
         </div>
-      </div>
 
         <div className="form">
-          <LoanInput/>
+          {accounts.map((account, index) => {
+            return (
+              <LoanInput
+                bank={account.bank}
+                snif={account.snif}
+                hashbon={account.hashbon}
+                updateData={updateData}
+                createAccounts={createAccounts}
+                key={index}
+              />
+            )
+          })}
         </div>
 
-        {/* <h5 className="grey">הוסף חשבון<i className="material-icons add_circle_outline">add_circle_outline</i></h5> */}
-        {/* <button className="wawes-effect wawes-light btn blue" type="submit"  onClick = {createBankAccounts}>
-          Submit
-        </button> */}
+        <h5 className="grey" onClick = {addAccount} style={{cursor: 'pointer'}}>
+          הוסף חשבון
+          <i className="material-icons add_circle_outline">
+            add_circle_outline
+          </i>
+        </h5>
+     
       </form>
       <div className="btn-continue-wrap" onClick={buttonHandler}>
         <i className="material-icons btn-continue">keyboard_arrow_right</i>

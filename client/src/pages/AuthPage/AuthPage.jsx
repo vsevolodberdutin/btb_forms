@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { AuthContext } from '../../context/AuthContext'
 
@@ -12,6 +13,8 @@ const AuthPage = () => {
   })
 
   const { login } = useContext(AuthContext)
+
+  let history = useHistory()
 
   const changeHandler = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value })
@@ -29,9 +32,18 @@ const AuthPage = () => {
             },
           }
         )
-        .then((response) => console.log(response))
+        .then((response) => {
+          alert(response.status)
+          if (response.status == 201) {
+            alert("Registration success!")
+            history.push('/')
+          }
+        })
+  
     } catch (error) {
-      console.log(error)
+      if (error == "Error: Request failed with status code 300") {
+        alert("This User is exist, login or try another!")
+      }
     }
   }
 
@@ -131,9 +143,9 @@ const AuthPage = () => {
                         className="validate"
                         onChange={changeHandler}
                       />
-                      <label for="email_inline">Email</label>
+                      <label htmlFor="email_inline">Email</label>
                       <span
-                        class="helper-text"
+                        className="helper-text"
                         data-error="Incorrect email address, please try again!"
                       />
                     </div>
@@ -152,14 +164,14 @@ const AuthPage = () => {
                       />
                     </div>
                     <div className="row">
-                    <Link to="/login" className="btn-outline btn-reg">
+                    {/* <Link to="/login" className="btn-outline btn-reg"> */}
                       <button
                         className="wawes-effect wawes-light btn blue"
                         onClick={registerHandler}
                       >
                         Registration
                       </button>
-                      </Link>
+                      {/* </Link> */}
                       <Link to="/login" className="btn-outline btn-reg">
                         You have account yet?
                       </Link>
