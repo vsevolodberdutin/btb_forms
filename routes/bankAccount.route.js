@@ -1,19 +1,19 @@
 const {Router} = require('express')
 const router = Router()
-const BankAccounts = require('../models/BankAccounts')
+const BankAccount = require('../models/BankAccount')
 
 router.post('/add', async (req,res) => {
     try {
-        const {procent, accounts, userId} = req.body
+        const {procent, account, userId} = req.body
 
-        const bankAccounts = await new BankAccounts({
+        const bankAccount = await new BankAccount({
             owner: userId,
             procent,
-            accounts,
+            account,
         })
-        await bankAccounts.save()
+        await bankAccount.save()
 
-        res.json(bankAccounts)
+        res.json(bankAccount)
 
     } catch (error){
         console.log(error)
@@ -24,9 +24,9 @@ router.get('/', async (req,res) => {
     try {
         const {userId} = req.query
 
-        const bankAccounts = await BankAccounts.find({owner:userId})
+        const bankAccount = await BankAccount.find({owner:userId})
 
-        res.json(bankAccounts)
+        res.json(bankAccount)
 
     } catch (error){
         console.log(error)

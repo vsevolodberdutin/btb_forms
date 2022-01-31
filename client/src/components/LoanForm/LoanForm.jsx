@@ -7,69 +7,97 @@ import axios from 'axios'
 
 const LoanForm = () => {
   let history = useHistory()
-  const initialAccount = { bank: '', hashbon: '', snif: '' }
-
-  const [accounts, setAccounts] = useState([initialAccount])
+  
   const { userId } = useContext(AuthContext)
+  const initialAccount = { bank: '', hashbon: '', snif: '' }
+  
   const [procent, setProcent] = useState('20%')
+  const [account, setAccount] = useState()
+  const [accountsAll, setAccountsAll] = useState([])
+  
 
-  const getAccounts = useCallback(async () => {
+///////////// async functions:
+
+  const getAccount = useCallback(async () => {
     try {
       await axios
-        .get('/api/bankAccounts', {
+        .get('/api/bankAccount', {
           headers: {
             'Content-Type': 'application/json',
           },
           params: { userId },
         })
         .then((response) => {
-          // console.log('res', response)
-          if (response.data.length != 0) setAccounts(response.data[0].accounts)
+          response.data.length == 0 
+          ?
+          setAccountsAll([...accountsAll, initialAccount])
+          :
+          setAccountsAll(response.data)
+          // console.log("response.data", accountsAll)
         })
     } catch (error) {
       console.log(error)
     }
   }, [userId])
-
+  
   useEffect(() => {
-    getAccounts()
+    getAccount()
   },[])
+  
 
-  const createAccounts = useCallback(async () => {
+
+
+const createAccount = useCallback(async () => {
     try {
-      if (accounts[0].snif != "")
-      await axios.post('/api/bankAccounts/add', {procent, accounts, userId}, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then((response) => {
-        setAccounts([...accounts], response.accounts)
-        getAccounts()
-      })
+        await axios.post('/api/bankAccount/add', {account, procent, userId}, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            getAccount()
+            
+        })
     } catch (error) {
-      console.log(error)
+        console.log(error)
     }
-  }, [procent, accounts, userId])
+}, [userId, getAccount, account, accountsAll])
+
+// const removeAccount = useCallback(async (id) => {
+//   try {   
+//       await axios.delete(`/api/bankAccount/delete/${id}`, {id}, {
+//           headers: {'Content-Type': 'application/json'}
+//       })
+//       .then(() => getAccount())
+      
+//   } catch (error) {
+//       console.log(error)
+//   }
+// }, [getAccount])
 
 
-  const buttonHandler = () => {
+
+/////////////// button handlers:
+
+  const buttonHandler = useCallback(() => {
     history.push('/')
-  }
+    console.log("history", accountsAll)
+  })
 
-  const addAccount = () => {
-    if (accounts[accounts.length-1].hashbon != '') {
-    setAccounts([...accounts, initialAccount])
+  const updateData = useCallback((value) => {
+    const arr = accountsAll.slice(0, -1)
+    setAccountsAll([...arr, { bank: value.bank, hashbon: value.hashbon, snif: value.snif}])
+    setAccount({ bank: value.bank, hashbon: value.hashbon, snif: value.snif})
+    createAccount()
+    console.log("updateData", accountsAll)
     
+  })
+  
+  const addAccount = useCallback(() => {
+    if (accountsAll[accountsAll.length - 1].snif != "" || undefined) {
+      setAccountsAll([...accountsAll, initialAccount])
   }
-  }
-
-  const updateData = (value) => {
-    
-    const arr = accounts.slice(0, -1)
-    setAccounts([...arr, { bank: value.bank, hashbon: value.hashbon, snif: value.snif}])
-    // console.log("value", accounts)
- }
+  })
 
   return (
     <div className="wrapper">
@@ -99,18 +127,26 @@ const LoanForm = () => {
         </div>
 
         <div className="form">
-          {accounts.map((account, index) => {
+
+          {
+          accountsAll.length > 0 
+          ?
+          accountsAll.map((account, index) => {
             return (
+              // console.log("s", account.snif)
               <LoanInput
                 bank={account.bank}
                 snif={account.snif}
                 hashbon={account.hashbon}
                 updateData={updateData}
-                createAccounts={createAccounts}
+                addAccount={addAccount}
                 key={index}
               />
-            )
-          })}
+             ) 
+          })
+          :
+          null
+        }
         </div>
 
         <h5 className="grey" onClick = {addAccount} style={{cursor: 'pointer'}}>

@@ -8,7 +8,7 @@ app.use(express.json({extended: true}))
 
 app.use('/api/auth', require('./routes/auth.route'))
 app.use('/api/data', require('./routes/data.route'))
-app.use('/api/bankAccounts', require('./routes/bankAccounts.route'))
+app.use('/api/bankAccount', require('./routes/bankAccount.route'))
 
 async function start() {
     try{

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import './LoanInput.scss'
 
 export const LoanInput = (props) => {
@@ -17,26 +17,29 @@ export const LoanInput = (props) => {
     setBank(props.bank)
     setSnif(props.snif)
     setHashbon(props.hashbon)
-    if (props.snif != '') {
+    console.log("props.snif", props)
+    if (props.snif != "" ) {
       setIsFree(false)
       inp1.current.disabled = true
       inp2.current.disabled = true
       inp3.current.disabled = true
     }
-  },[props])
+  },[])
 
-  const saveData = () => {
+
+  const saveData = useCallback(() => {
+
     if (bank != "" && snif != "" && hashbon != ""){
     props.updateData({bank, snif, hashbon})
     inp1.current.disabled = true
     inp2.current.disabled = true
     inp3.current.disabled = true
     setIsFree(false)
-    props.createAccounts()
+    props.addAccount()
     }else{
       alert('enter full data!')
     }
-  }
+  })
 
   return (
     <>
@@ -89,13 +92,14 @@ export const LoanInput = (props) => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
         {!isFree
           ?
-          <i
-            className="material-icons red-text"
-            onClick={(e) => {  }}
-            style={{ cursor: 'pointer' }}
-          >
-            remove_circle_outline
-          </i>
+          null
+          // <i
+          //   className="material-icons red-text"
+          //   onClick={(e) => {  }}
+          //   style={{ cursor: 'pointer' }}
+          // >
+          //   remove_circle_outline
+          // </i>
           :
           <i
             className="material-icons green-text "
